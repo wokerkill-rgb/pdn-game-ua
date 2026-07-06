@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -20,10 +21,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
+
+      - name: Validate project structure
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "package.json")) {
+            throw "package.json was not found. Commit the full PDN Game UA app source before creating a release."
+          }
 
       - name: Install dependencies
-        run: npm ci
+        shell: pwsh
+        run: |
+          if (Test-Path "package-lock.json") {
+            npm ci
+          } else {
+            npm install
+          }
 
       - name: Validate scripts
         run: npm run check
@@ -36,13 +49,18 @@ jobs:
         run: |
           $version = node -p "require('./package.json').version"
           $exe = Get-ChildItem -LiteralPath "dist" -Filter "PDN Game UA $version.exe" -File | Select-Object -First 1
-          if (-not $exe) { throw "Release exe was not found for version $version" }
+
+          if (-not $exe) {
+            throw "Release exe was not found for version $version"
+          }
+
           $hash = (Get-FileHash -LiteralPath $exe.FullName -Algorithm SHA256).Hash
           $size = (Get-Item -LiteralPath $exe.FullName).Length
-          "PDN_RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
-          "EXE_PATH=$($exe.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append
-          "EXE_SHA256=$hash" | Out-File -FilePath $env:GITHUB_ENV -Append
-          "EXE_SIZE=$size" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+          "PDN_RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "EXE_PATH=$($exe.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "EXE_SHA256=$hash" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "EXE_SIZE=$size" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Prepare update manifest
         run: npm run release:manifest
@@ -60,22 +78,36 @@ jobs:
         run: |
           $version = $env:PDN_RELEASE_VERSION
           $publicDir = "dist\PDN_Game_UA_${version}_Public"
+
           New-Item -ItemType Directory -Force -Path $publicDir | Out-Null
 
           Copy-Item -LiteralPath "dist\PDN Game UA $version.exe" -Destination "$publicDir\PDN Game UA $version.exe" -Force
-          Copy-Item -LiteralPath "start-admin.cmd" -Destination "$publicDir\start-admin.cmd" -Force
-          Copy-Item -LiteralPath "create-pdn-game-ua-shortcut.cmd" -Destination "$publicDir\create-pdn-game-ua-shortcut.cmd" -Force
-          Copy-Item -LiteralPath "README.md" -Destination "$publicDir\README.md" -Force
-          Copy-Item -LiteralPath "SECURITY_UA.md" -Destination "$publicDir\SECURITY_UA.md" -Force
+
+          $optionalFiles = @(
+            "start-admin.cmd",
+            "create-pdn-game-ua-shortcut.cmd",
+            "README.md",
+            "SECURITY_UA.md"
+          )
+
+          foreach ($file in $optionalFiles) {
+            if (Test-Path $file) {
+              Copy-Item -LiteralPath $file -Destination "$publicDir\$file" -Force
+            } else {
+              Write-Host "Optional file not found, skipped: $file"
+            }
+          }
 
           Copy-Item -LiteralPath "website\downloads\pdn-game-ua\update.json" -Destination "dist\update.json" -Force
           Copy-Item -LiteralPath "website\downloads\pdn-game-ua\update.json.sig" -Destination "dist\update.json.sig" -Force
 
           $zipPath = "dist\PDN_Game_UA_${version}_Public.zip"
           Compress-Archive -Path "$publicDir\*" -DestinationPath $zipPath -Force
+
           $zipHash = (Get-FileHash -LiteralPath $zipPath -Algorithm SHA256).Hash
-          "PUBLIC_ZIP_PATH=$zipPath" | Out-File -FilePath $env:GITHUB_ENV -Append
-          "PUBLIC_ZIP_SHA256=$zipHash" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+          "PUBLIC_ZIP_PATH=$zipPath" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "PUBLIC_ZIP_SHA256=$zipHash" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Write release notes
         run: npm run release:notes

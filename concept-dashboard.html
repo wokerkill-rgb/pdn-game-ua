@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PDN Game UA Concept</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #070b0f;
+        --panel: rgba(12, 18, 24, 0.82);
+        --panel-strong: rgba(14, 22, 29, 0.94);
+        --line: rgba(144, 196, 255, 0.18);
+        --text: #f4f8fb;
+        --muted: #9eb0be;
+        --accent: #18a8ff;
+        --accent-2: #31f0c4;
+        --warn: #ffb84d;
+        --danger: #ff5d52;
+        --ok: #46e578;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-width: 1180px;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      .shell {
+        display: grid;
+        grid-template-columns: 260px minmax(0, 1fr);
+        min-height: 100vh;
+        background:
+          linear-gradient(90deg, rgba(7, 11, 15, 0.96), rgba(7, 11, 15, 0.44)),
+          url("assets/game-hero.png") center / cover fixed;
+      }
+
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        padding: 26px 20px;
+        border-right: 1px solid var(--line);
+        background: rgba(5, 9, 13, 0.88);
+        box-shadow: 18px 0 44px rgba(0, 0, 0, 0.28);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 28px;
+      }
+
+      .brand-mark,
+      .avatar,
+      .hex {
+        display: grid;
+        place-items: center;
+        width: 46px;
+        aspect-ratio: 1;
+        border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+        border-radius: 10px;
+        background: linear-gradient(135deg, rgba(24, 168, 255, 0.28), rgba(49, 240, 196, 0.12));
+        font-weight: 950;
+      }
+
+      .brand strong,
+      .profile strong {
+        display: block;
+        font-size: 16px;
+      }
+
+      .brand span,
+      .profile span,
+      .muted {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .nav {
+        display: grid;
+        gap: 8px;
+      }
+
+      .nav button,
+      .social,
+      .primary,
+      .secondary {
+        border: 1px solid transparent;
+        border-radius: 8px;
+        color: var(--text);
+        font: inherit;
+      }
+
+      .nav button {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 48px;
+        padding: 0 14px;
+        background: transparent;
+        text-align: left;
+      }
+
+      .nav button.is-active,
+      .nav button:hover {
+        border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+        background: linear-gradient(90deg, rgba(24, 168, 255, 0.22), rgba(24, 168, 255, 0.04));
+        box-shadow: inset 4px 0 0 var(--accent);
+      }
+
+      .nav-icon {
+        width: 20px;
+        text-align: center;
+        color: var(--accent);
+        font-weight: 900;
+      }
+
+      .join-card {
+        margin-top: auto;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .social-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .social {
+        display: grid;
+        place-items: center;
+        min-height: 36px;
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .main {
+        padding: 22px 24px 28px;
+        background:
+          radial-gradient(circle at 72% 10%, rgba(24, 168, 255, 0.18), transparent 32rem),
+          linear-gradient(180deg, rgba(3, 6, 9, 0.28), rgba(3, 6, 9, 0.86));
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 18px;
+        min-height: 64px;
+      }
+
+      .profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 360px;
+        padding: 8px 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(7, 11, 15, 0.64);
+      }
+
+      .xp {
+        width: 150px;
+        height: 6px;
+        overflow: hidden;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .xp i {
+        display: block;
+        width: 62%;
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      }
+
+      .lang {
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .lang b {
+        color: var(--accent);
+      }
+
+      .hero {
+        display: grid;
+        align-content: center;
+        min-height: 330px;
+        padding: 34px 42px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background:
+          linear-gradient(90deg, rgba(5, 9, 13, 0.94), rgba(5, 9, 13, 0.58), rgba(5, 9, 13, 0.2)),
+          url("assets/game-hero.png") center / cover;
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.32);
+      }
+
+      .hero small {
+        color: var(--accent-2);
+        font-weight: 950;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 12px 0 12px;
+        font-size: 58px;
+        line-height: 0.94;
+        letter-spacing: 0;
+      }
+
+      .hero p {
+        max-width: 560px;
+        margin: 0;
+        color: #d2dde5;
+        font-size: 22px;
+        line-height: 1.35;
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .primary,
+      .secondary {
+        min-height: 50px;
+        padding: 0 18px;
+        font-weight: 950;
+      }
+
+      .primary {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #041014;
+      }
+
+      .secondary {
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .server-strip,
+      .dashboard {
+        display: grid;
+        gap: 14px;
+        margin-top: 14px;
+      }
+
+      .server-strip {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .server-card,
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .server-card {
+        display: grid;
+        grid-template-columns: 138px 1fr auto;
+        gap: 14px;
+        min-height: 116px;
+        padding: 12px;
+      }
+
+      .thumb {
+        border-radius: 6px;
+        background:
+          linear-gradient(rgba(8, 12, 16, 0.08), rgba(8, 12, 16, 0.42)),
+          url("assets/game-hero.png") center / cover;
+      }
+
+      .server-card h3,
+      .panel h3 {
+        margin: 0;
+        font-size: 16px;
+      }
+
+      .server-meta {
+        display: flex;
+        gap: 12px;
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .dot {
+        display: inline-block;
+        width: 9px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--ok);
+      }
+
+      .dot.offline {
+        background: var(--danger);
+      }
+
+      .ping {
+        color: var(--ok);
+        font-weight: 900;
+      }
+
+      .ping.warn {
+        color: var(--warn);
+      }
+
+      .dashboard {
+        grid-template-columns: 1fr 1fr 1.12fr;
+      }
+
+      .panel {
+        min-height: 250px;
+        padding: 18px;
+      }
+
+      .panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+
+      .panel-head a {
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 900;
+        text-decoration: none;
+      }
+
+      .news-item,
+      .activity-item,
+      .system-row {
+        display: grid;
+        gap: 4px;
+        padding: 12px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .news-item {
+        grid-template-columns: 82px 1fr auto;
+      }
+
+      .news-img {
+        min-height: 54px;
+        border-radius: 6px;
+        background: url("assets/game-hero.png") center / cover;
+      }
+
+      .tag {
+        color: var(--accent);
+        font-size: 11px;
+        font-weight: 950;
+        text-transform: uppercase;
+      }
+
+      .activity-item {
+        grid-template-columns: 38px 1fr auto;
+        align-items: center;
+      }
+
+      .system-row {
+        grid-template-columns: 1fr auto auto;
+        align-items: center;
+        color: var(--muted);
+      }
+
+      .system-row strong,
+      .news-item strong,
+      .activity-item strong {
+        color: var(--text);
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">P</div>
+          <div>
+            <strong>PDN GAME UA</strong>
+            <span>Community Launcher</span>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="is-active"><span class="nav-icon">⌂</span>Головна</button>
+          <button><span class="nav-icon">▤</span>Сервери</button>
+          <button><span class="nav-icon">◉</span>Новини</button>
+          <button><span class="nav-icon">☷</span>Спільнота</button>
+          <button><span class="nav-icon">◌</span>Канали</button>
+          <button><span class="nav-icon">▣</span>Міні Ігри PDN</button>
+          <button><span class="nav-icon">↻</span>Оновлення</button>
+          <button><span class="nav-icon">⚙</span>Налаштування</button>
+        </nav>
+
+        <div class="join-card">
+          <strong>Приєднуйся до нас</strong>
+          <div class="social-row">
+            <div class="social">DC</div>
+            <div class="social">ST</div>
+            <div class="social">YT</div>
+            <div class="social">UA</div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="topbar">
+          <div class="profile">
+            <div class="avatar">PDN</div>
+            <div>
+              <strong>PDN_Player</strong>
+              <span>Steam підключено</span>
+            </div>
+            <div class="xp"><i></i></div>
+            <div class="hex">24</div>
+          </div>
+          <div class="lang"><b>UA</b> | EN</div>
+        </div>
+
+        <section class="hero">
+          <small>PaDeNa Game UA</small>
+          <h1>Ласкаво просимо<br>до PDN Game UA</h1>
+          <p>Усе необхідне для спільноти в одному легкому додатку: сервери, новини, чат, голос і міні ігри.</p>
+          <div class="actions">
+            <button class="primary">▶ Швидке підключення</button>
+            <button class="secondary">Переглянути сервери</button>
+          </div>
+        </section>
+
+        <section class="server-strip">
+          <article class="server-card">
+            <div class="thumb"></div>
+            <div>
+              <h3>PDN Arma UA #1</h3>
+              <div class="server-meta"><span>128 / 128</span><span class="ping">32 ms</span></div>
+              <p><span class="dot"></span> Онлайн</p>
+            </div>
+            <strong>☆</strong>
+          </article>
+          <article class="server-card">
+            <div class="thumb"></div>
+            <div>
+              <h3>PDN Arma UA #2</h3>
+              <div class="server-meta"><span>96 / 128</span><span class="ping warn">45 ms</span></div>
+              <p><span class="dot"></span> Онлайн</p>
+            </div>
+            <strong>☆</strong>
+          </article>
+          <article class="server-card">
+            <div class="thumb"></div>
+            <div>
+              <h3>PDN Test Server</h3>
+              <div class="server-meta"><span>0 / 64</span><span>offline</span></div>
+              <p><span class="dot offline"></span> Офлайн</p>
+            </div>
+            <strong>☆</strong>
+          </article>
+        </section>
+
+        <section class="dashboard">
+          <article class="panel">
+            <div class="panel-head">
+              <h3>Новини</h3>
+              <a href="#">Переглянути всі</a>
+            </div>
+            <div class="news-item">
+              <div class="news-img"></div>
+              <div><span class="tag">Важливо</span><strong>Оновлення лаунчера</strong><div class="muted">Нова головна сторінка і швидке підключення.</div></div>
+              <span class="muted">03.07</span>
+            </div>
+            <div class="news-item">
+              <div class="news-img"></div>
+              <div><span class="tag">Івент</span><strong>Подвійний досвід</strong><div class="muted">Активність спільноти на вихідних.</div></div>
+              <span class="muted">04.07</span>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <h3>Активність</h3>
+              <a href="#">До спільноти</a>
+            </div>
+            <div class="activity-item"><div class="avatar">S</div><div><strong>SkyHunter</strong><div class="muted">підключив Steam профіль</div></div><span>✓</span></div>
+            <div class="activity-item"><div class="avatar">I</div><div><strong>IronWolf</strong><div class="muted">написав у каналі сервера #1</div></div><span>▣</span></div>
+            <div class="activity-item"><div class="avatar">V</div><div><strong>Valkyrie</strong><div class="muted">увійшла в голосовий канал</div></div><span>◌</span></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <h3>Стан системи</h3>
+              <a href="#">Деталі</a>
+            </div>
+            <div class="system-row"><strong>Ігрові сервери</strong><span>Працюють</span><span class="dot"></span></div>
+            <div class="system-row"><strong>Steam авторизація</strong><span>Працює</span><span class="dot"></span></div>
+            <div class="system-row"><strong>Голосові канали</strong><span>Локальний тест</span><span class="dot"></span></div>
+            <div class="system-row"><strong>Оновлення</strong><span>v0.1.17</span><span class="dot"></span></div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

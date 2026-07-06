@@ -1,0 +1,52 @@
+{
+  "name": "pdn-game-ua",
+  "version": "0.2.0",
+  "private": true,
+  "description": "PDN Game UA lightweight launcher prototype for PaDeNa Game UA servers.",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "node server.js",
+    "desktop": "electron .",
+    "dist": "electron-builder --win portable",
+    "check": "node --check app.js && node --check server.js && node --check main.cjs && node --check lib/update-signing.cjs && node --check tools/generate-update-keys.cjs && node --check tools/prepare-release-manifest.cjs && node --check tools/sign-update-manifest.cjs && node --check tools/verify-update-manifest.cjs && node --check tools/write-release-notes.cjs",
+    "update:keys": "node tools/generate-update-keys.cjs",
+    "release:manifest": "node tools/prepare-release-manifest.cjs",
+    "release:notes": "node tools/write-release-notes.cjs",
+    "update:sign": "node tools/sign-update-manifest.cjs",
+    "update:verify": "node tools/verify-update-manifest.cjs"
+  },
+  "build": {
+    "appId": "ua.padena.pdngameua",
+    "productName": "PDN Game UA",
+    "asar": true,
+    "files": [
+      "index.html",
+      "styles.css",
+      "app.js",
+      "server.js",
+      "main.cjs",
+      "lib/**/*",
+      "package.json",
+      "SECURITY_UA.md",
+      "start-admin.cmd",
+      "create-pdn-game-ua-shortcut.cmd",
+      "data/**/*",
+      "assets/**/*"
+    ],
+    "win": {
+      "icon": "assets/app.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "appId": "ua.padena.pdngameua",
+  "version": "0.2.0",
+  "releaseDate": "2026-07-06",
+  "notes": {
+    "uk": "Додано Ed25519 підпис manifest оновлень. Додаток тепер перевіряє підпис update.json перед тим, як довіряти URL, версії та SHA256 файлу.",
+    "en": "Added Ed25519 signing for the update manifest. The app now verifies update.json before trusting the URL, version, and file SHA256."
+  },
+  "files": {
+    "winPortable": {
+      "url": "https://github.com/wokerkill-rgb/pdn-game-ua/releases/download/v0.2.0/PDN%20Game%20UA%200.2.0.exe",
+      "sha256": "73858094f35087551252e698199571a667bea2c05581cb3e5f06de286675518e",
+      "size": 73713589
+    }
+  },
+  "signature": {
+    "algorithm": "ed25519",
+    "keyId": "pdn-game-ua-update-v1",
+    "value": "YUELHj2itQ1qNeUtQtEhERppXhjmTVmN/bo2ewsomyrn6FhT6rlZ/z0+R91pOdHZy9EGeJsz3qUOfpJDc3fRDg=="
+  }
+}

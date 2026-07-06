@@ -3,287 +3,529 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="PDN Game UA lightweight launcher for the PaDeNa Game UA community.">
     <title>PDN Game UA</title>
-    <link rel="icon" href="download/assets/app.ico">
-    <style>
-      :root {
-        color-scheme: dark;
-        --bg: #080b0d;
-        --panel: rgba(12, 17, 20, 0.82);
-        --panel-strong: rgba(12, 17, 20, 0.94);
-        --line: rgba(255, 255, 255, 0.13);
-        --text: #f4f8f7;
-        --muted: #9aa8a6;
-        --accent: #18d2c1;
-        --accent-2: #ffb34d;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        min-width: 320px;
-        margin: 0;
-        background: var(--bg);
-        color: var(--text);
-      }
-
-      a {
-        color: inherit;
-      }
-
-      .page {
-        position: relative;
-        min-height: 100vh;
-        overflow: hidden;
-      }
-
-      .hero-image,
-      .shade {
-        position: fixed;
-        inset: 0;
-      }
-
-      .hero-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        filter: saturate(1.08);
-      }
-
-      .shade {
-        background:
-          linear-gradient(90deg, rgba(4, 6, 7, 0.96), rgba(4, 6, 7, 0.78) 42%, rgba(4, 6, 7, 0.34)),
-          linear-gradient(0deg, rgba(8, 11, 13, 0.96), rgba(8, 11, 13, 0.2) 62%);
-      }
-
-      header,
-      main {
-        position: relative;
-        z-index: 1;
-        width: min(1120px, calc(100% - 32px));
-        margin: 0 auto;
-      }
-
-      header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 18px;
-        padding: 22px 0;
-      }
-
-      .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        min-width: 0;
-        text-decoration: none;
-      }
-
-      .mark {
-        display: grid;
-        place-items: center;
-        width: 42px;
-        aspect-ratio: 1;
-        border: 1px solid color-mix(in srgb, var(--accent) 52%, transparent);
-        border-radius: 8px;
-        background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 34%, #101415), #101416);
-        color: #ffffff;
-        font-weight: 900;
-      }
-
-      .brand strong,
-      .brand small {
-        display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .brand small {
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .github {
-        padding: 10px 12px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.06);
-        color: var(--text);
-        font-size: 13px;
-        font-weight: 800;
-        text-decoration: none;
-      }
-
-      main {
-        display: grid;
-        align-content: center;
-        min-height: calc(100vh - 86px);
-        padding: 42px 0 70px;
-      }
-
-      .eyebrow {
-        margin: 0 0 16px;
-        color: var(--accent);
-        font-size: 13px;
-        font-weight: 900;
-        text-transform: uppercase;
-      }
-
-      h1 {
-        max-width: 780px;
-        margin: 0;
-        font-size: clamp(44px, 8vw, 96px);
-        line-height: 0.94;
-        letter-spacing: 0;
-      }
-
-      .copy {
-        max-width: 660px;
-        margin: 22px 0 0;
-        color: #c6d2d0;
-        font-size: clamp(17px, 2vw, 22px);
-        line-height: 1.5;
-      }
-
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 34px;
-      }
-
-      .download,
-      .secondary {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 50px;
-        padding: 0 18px;
-        border-radius: 8px;
-        font-weight: 900;
-        text-decoration: none;
-      }
-
-      .download {
-        border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
-        background: linear-gradient(135deg, var(--accent), var(--accent-2));
-        color: #06100f;
-      }
-
-      .secondary {
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.07);
-        color: var(--text);
-      }
-
-      .info {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
-        max-width: 820px;
-        margin-top: 38px;
-      }
-
-      .info-card {
-        min-height: 94px;
-        padding: 14px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--panel);
-      }
-
-      .info-card strong {
-        display: block;
-        margin-bottom: 8px;
-      }
-
-      .info-card span,
-      .hash {
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.45;
-      }
-
-      .hash {
-        max-width: 820px;
-        margin-top: 12px;
-        padding: 12px 14px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--panel-strong);
-        overflow-wrap: anywhere;
-      }
-
-      code {
-        color: #ffffff;
-      }
-
-      @media (max-width: 780px) {
-        header {
-          align-items: flex-start;
-          flex-direction: column;
-        }
-
-        main {
-          min-height: auto;
-          padding-top: 44px;
-        }
-
-        .info {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="styles.css">
   </head>
-  <body>
-    <div class="page">
-      <img class="hero-image" src="download/assets/game-hero.png" alt="">
-      <div class="shade"></div>
-
-      <header>
-        <a class="brand" href="./">
-          <span class="mark">P</span>
-          <span>
-            <strong>PDN Game UA</strong>
-            <small>PaDeNa Game UA community launcher</small>
-          </span>
-        </a>
-        <a class="github" href="https://github.com/wokerkill-rgb">GitHub wokerkill-rgb</a>
-      </header>
-
-      <main>
-        <p class="eyebrow">Windows launcher</p>
-        <h1>PDN Game UA</h1>
-        <p class="copy">Усе необхідне для української спільноти PaDeNa Game UA в одному легкому додатку: сервери, новини, Steam-профіль, чат, голос і майбутні міні ігри.</p>
-
-        <div class="actions">
-          <a class="download" href="https://github.com/wokerkill-rgb/pdn-game-ua/releases/download/v0.1.17/PDN_Game_UA_0.1.17_Public.zip">Завантажити PDN Game UA</a>
-          <a class="secondary" href="https://github.com/wokerkill-rgb/pdn-game-ua/releases/tag/v0.1.17">GitHub Release</a>
+  <body data-theme="nexus">
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary">
+        <div class="brand-block">
+          <div class="brand-mark" aria-hidden="true">
+            <img src="assets/pdn-menu-logo.png" alt="">
+          </div>
+          <div>
+            <div class="brand-name">PDN Game <span>UA</span></div>
+            <div class="brand-status" data-i18n="brandStatus">Tactical Community Hub</div>
+          </div>
         </div>
 
-        <section class="info" aria-label="Download details">
-          <div class="info-card">
-            <strong>Версія</strong>
-            <span>0.1.17 для Windows x64</span>
+        <nav class="nav-list" aria-label="Sections">
+          <button class="nav-item is-active" type="button" data-panel="home">
+            <span class="icon-home" aria-hidden="true"></span>
+            <span data-i18n="navHome">Головна</span>
+          </button>
+          <button class="nav-item" type="button" data-panel="servers">
+            <span class="icon-grid" aria-hidden="true"></span>
+            <span data-i18n="navServers">Сервери</span>
+          </button>
+          <button class="nav-item" type="button" data-panel="news">
+            <span class="icon-news" aria-hidden="true"></span>
+            <span data-i18n="navNews">Новини</span>
+          </button>
+          <button class="nav-item" type="button" data-panel="community">
+            <span class="icon-community" aria-hidden="true"></span>
+            <span data-i18n="navCommunity">Спільнота</span>
+          </button>
+          <button class="nav-item" type="button" data-panel="games">
+            <span class="icon-games" aria-hidden="true"></span>
+            <span data-i18n="navGames">Міні Ігри PDN</span>
+          </button>
+          <button class="nav-item" type="button" data-panel="style">
+            <span class="icon-style" aria-hidden="true"></span>
+            <span data-i18n="navSettings">Налаштування</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-spacer"></div>
+
+        <section class="client-card" aria-label="Client status">
+          <div>
+            <span class="pulse-dot" aria-hidden="true"></span>
+            <strong data-i18n="clientReady">Клієнт актуальний</strong>
           </div>
-          <div class="info-card">
-            <strong>Оновлення</strong>
-            <span>Кнопка Оновити всередині додатка перевіряє нові версії.</span>
-          </div>
-          <div class="info-card">
-            <strong>Steam</strong>
-            <span>PDN Game UA не бачить і не зберігає пароль Steam.</span>
-          </div>
+          <small>PDN Game UA 0.2.0</small>
         </section>
 
-        <p class="hash">SHA256 zip: <code>5E32236AEB946D6777F5BFA713EB278D9F85438DC1ECF557F576ED7B9A53AE25</code></p>
+        <div class="sidebar-bottom">
+          <button class="update-entry" type="button" id="updateButton">
+            <span class="icon-update" aria-hidden="true"></span>
+            <span>
+              <strong data-i18n="updateButton">Оновити</strong>
+              <small id="updateStatus" data-i18n="updateIdle">Перевірити версію</small>
+            </span>
+          </button>
+          <button class="admin-entry" type="button" data-open-admin aria-label="Admin">
+            <span class="icon-lock" aria-hidden="true"></span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-view">
+        <header class="topbar">
+          <label class="search-box">
+            <span class="icon-search" aria-hidden="true"></span>
+            <input type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Пошук серверів, новин, режимів...">
+            <kbd>Ctrl + K</kbd>
+          </label>
+
+          <div class="language-toggle" aria-label="Language">
+            <button class="lang-button is-active" type="button" data-lang="uk">UA</button>
+            <button class="lang-button" type="button" data-lang="en">EN</button>
+          </div>
+
+          <section class="profile-card" aria-label="Steam profile">
+            <button class="profile-main" type="button" id="steamLogin">
+              <span class="profile-avatar" id="profileAvatar">?</span>
+              <span class="profile-meta">
+                <strong id="profileName">Guest</strong>
+                <small id="profileSteamId" data-i18n="steamGuest">Steam не підключено</small>
+              </span>
+            </button>
+            <form class="profile-form" id="profileForm">
+              <input id="profileNickname" type="text" maxlength="32" autocomplete="nickname" data-i18n-placeholder="nicknamePlaceholder" placeholder="Нік гравця">
+              <button type="submit" id="profileSave" data-i18n="saveNickname">Зберегти</button>
+            </form>
+            <p class="profile-hint" id="profileHint" data-i18n="profileHintGuest">Увійди через Steam, щоб мати один нік у грі, чаті та голосі.</p>
+          </section>
+        </header>
+
+        <section class="workspace">
+          <section class="panel is-visible" id="panel-home" data-panel-view="home">
+            <div class="hero-card">
+              <img src="assets/game-hero.png" alt="" class="hero-image">
+              <div class="hero-overlay"></div>
+              <div class="hero-content">
+                <p class="eyebrow" data-i18n="eyebrow">Тактичний лаунчер спільноти</p>
+                <h1>PDN Game <span>UA</span></h1>
+                <p class="hero-copy" data-i18n="heroCopy">Усе необхідне для спільноти в одному додатку.</p>
+                <div class="hero-badges">
+                  <span><span class="icon-lock" aria-hidden="true"></span><span data-i18n="secureServers">Захищені сервери</span></span>
+                  <span><span class="icon-community" aria-hidden="true"></span><span data-i18n="activeCommunity">Активна спільнота</span></span>
+                  <span><span class="icon-headset" aria-hidden="true"></span><span data-i18n="perServerVoice">Чат і голос на кожному сервері</span></span>
+                </div>
+                <div class="hero-actions">
+                  <button class="primary-action" type="button" data-scroll-servers>
+                    <span class="icon-play" aria-hidden="true"></span>
+                    <span data-i18n="quickConnect">Швидке підключення</span>
+                  </button>
+                  <button class="secondary-action" type="button" data-switch-panel="servers">
+                    <span class="icon-grid" aria-hidden="true"></span>
+                    <span data-i18n="viewServers">Переглянути сервери</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="quick-grid">
+              <button class="quick-card" type="button" data-switch-panel="servers">
+                <span class="quick-icon icon-play" aria-hidden="true"></span>
+                <strong data-i18n="quickConnect">Швидке підключення</strong>
+                <small data-i18n="quickConnectDesc">Підключайся до доступного сервера одним кліком.</small>
+              </button>
+              <button class="quick-card" type="button" data-switch-panel="servers">
+                <span class="quick-icon icon-grid" aria-hidden="true"></span>
+                <strong data-i18n="allServers">Усі сервери</strong>
+                <small data-i18n="allServersDesc">Перегляд статусу, гравців, карти і каналів.</small>
+              </button>
+              <button class="quick-card" type="button" data-switch-panel="community">
+                <span class="quick-icon icon-community" aria-hidden="true"></span>
+                <strong data-i18n="communityTitle">Спільнота</strong>
+                <small data-i18n="communityDesc">Новини, події і активність PaDeNa Game UA.</small>
+              </button>
+              <button class="quick-card" type="button" data-open-admin>
+                <span class="quick-icon icon-lock" aria-hidden="true"></span>
+                <strong data-i18n="myServer">Мій сервер</strong>
+                <small data-i18n="myServerDesc">Адмін-панель для рестарту і контролю.</small>
+              </button>
+            </div>
+
+            <div class="home-grid">
+              <section class="home-block home-block-wide">
+                <div class="rail-head">
+                  <h2 data-i18n="recommendedServers">Рекомендовані сервери</h2>
+                  <button class="link-button" type="button" data-switch-panel="servers" data-i18n="viewAll">Переглянути всі</button>
+                </div>
+                <div class="home-server-strip" id="homeServerStrip"></div>
+              </section>
+
+              <section class="home-block">
+                <div class="rail-head">
+                  <h2 data-i18n="latestNews">Останні новини</h2>
+                  <button class="link-button" type="button" data-open-news data-i18n="viewAll">Переглянути всі</button>
+                </div>
+                <div id="latestNewsCard"></div>
+              </section>
+
+              <section class="home-block">
+                <div class="rail-head">
+                  <h2 data-i18n="activity">Активність</h2>
+                  <span class="pulse-dot" aria-hidden="true"></span>
+                </div>
+                <div class="activity-list" id="activityList"></div>
+              </section>
+
+              <section class="home-block system-block">
+                <div class="rail-head">
+                  <h2 data-i18n="systemStatus">Стан системи</h2>
+                  <span data-i18n="allSystemsNormal">Усі системи в нормі</span>
+                </div>
+                <div class="system-row">
+                  <span data-i18n="gameServers">Ігрові сервери</span>
+                  <strong><span class="pulse-dot" aria-hidden="true"></span><span data-i18n="works">Працює</span></strong>
+                </div>
+                <div class="system-row">
+                  <span data-i18n="chatAndVoice">Чат та голос</span>
+                  <strong><span class="pulse-dot" aria-hidden="true"></span><span data-i18n="works">Працює</span></strong>
+                </div>
+                <div class="system-row">
+                  <span data-i18n="authSystem">Авторизація</span>
+                  <strong><span class="pulse-dot" aria-hidden="true"></span><span data-i18n="works">Працює</span></strong>
+                </div>
+                <div class="metric-strip">
+                  <div>
+                    <span data-i18n="playersOnline">гравців онлайн</span>
+                    <strong id="totalPlayers">0</strong>
+                  </div>
+                  <div>
+                    <span data-i18n="networkLoad">Навантаження</span>
+                    <strong id="networkLoad">42%</strong>
+                  </div>
+                  <div>
+                    <span data-i18n="ping">Ping</span>
+                    <strong id="avgPing">28ms</strong>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section class="panel" id="panel-servers" data-panel-view="servers">
+            <div class="server-toolbar">
+              <div class="server-filter-pill">
+                <span class="icon-games" aria-hidden="true"></span>
+                <span>
+                  <small data-i18n="mode">Режим</small>
+                  <strong data-i18n="allModes">Усі режими</strong>
+                </span>
+              </div>
+              <div class="status-filter" aria-label="Filter">
+                <button class="filter-button is-active" type="button" data-filter="all" data-i18n="all">Усі</button>
+                <button class="filter-button" type="button" data-filter="online" data-i18n="online">Онлайн</button>
+                <button class="filter-button" type="button" data-filter="favorites" data-i18n="favorites">Обрані</button>
+              </div>
+              <div class="server-filter-pill">
+                <span class="icon-style" aria-hidden="true"></span>
+                <span>
+                  <small data-i18n="sorting">Сортування</small>
+                  <strong data-i18n="recommended">Рекомендовані</strong>
+                </span>
+              </div>
+              <button class="server-filter-pill server-filter-button" type="button">
+                <span class="icon-filter" aria-hidden="true"></span>
+                <strong data-i18n="filters">Фільтри</strong>
+              </button>
+            </div>
+
+            <div class="server-workbench">
+              <div class="server-list-column">
+                <div class="section-head">
+                  <div>
+                    <p class="section-kicker" data-i18n="serverNetwork">PDN Network</p>
+                    <h2 data-i18n="recommendedServers">Рекомендовані сервери</h2>
+                  </div>
+                  <span class="connection-badge" id="serverCountLabel">2</span>
+                </div>
+                <div class="server-list" id="serverList"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" id="panel-news" data-panel-view="news">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker" data-i18n="newsKicker">PDN Briefing</p>
+                <h2 data-i18n="newsTitle">Новини серверів</h2>
+              </div>
+              <div class="connection-badge">
+                <span class="pulse-dot" aria-hidden="true"></span>
+                <span data-i18n="newsLive">Live feed</span>
+              </div>
+            </div>
+            <div class="news-layout" id="newsList"></div>
+          </section>
+
+          <section class="panel" id="panel-community" data-panel-view="community">
+            <div class="community-hero">
+              <img src="assets/game-hero.png" alt="" class="hero-image">
+              <div class="hero-overlay"></div>
+              <div>
+                <p class="section-kicker" data-i18n="communityKicker">PDN Community</p>
+                <h2 data-i18n="communityPanelTitle">Спільнота PDN Game UA</h2>
+                <p data-i18n="communityPanelText">Тут будуть оголошення, події, активність гравців і правила спільноти.</p>
+              </div>
+            </div>
+            <div class="community-grid">
+              <article class="community-card">
+                <span class="icon-news" aria-hidden="true"></span>
+                <h3 data-i18n="communityAnnouncements">Оголошення</h3>
+                <p data-i18n="communityAnnouncementsDesc">Важливі повідомлення для всіх серверів PDN.</p>
+              </article>
+              <article class="community-card">
+                <span class="icon-community" aria-hidden="true"></span>
+                <h3 data-i18n="communityEvents">Події</h3>
+                <p data-i18n="communityEventsDesc">Івенти, набори, рейди і плани на тиждень.</p>
+              </article>
+              <article class="community-card">
+                <span class="icon-chat" aria-hidden="true"></span>
+                <h3 data-i18n="communityChannels">Серверні канали</h3>
+                <p data-i18n="communityChannelsDesc">Чат і голос відкриваються окремо для кожного сервера.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel" id="panel-games" data-panel-view="games">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker" data-i18n="gamesKicker">PDN Mini Games</p>
+                <h2 data-i18n="gamesTitle">Міні Ігри PDN</h2>
+              </div>
+              <div class="connection-badge">
+                <span class="pulse-dot" aria-hidden="true"></span>
+                <span data-i18n="gamesHubStatus">Хаб готовий</span>
+              </div>
+            </div>
+            <div class="games-grid">
+              <article class="game-card game-card-featured">
+                <div class="game-card-art" aria-hidden="true">
+                  <span>6</span>
+                  <span>A</span>
+                  <span>K</span>
+                </div>
+                <span class="news-tag" data-i18n="gameCards">Карткова гра</span>
+                <h3 data-i18n="durakTitle">Дурак</h3>
+                <p data-i18n="durakDesc">Першою грою зробимо легкий онлайн-режим з приватними столами для гравців PDN.</p>
+                <div class="game-meta">
+                  <span data-i18n="gamePlayers">2-6 гравців</span>
+                  <span data-i18n="gameStatusDesign">Проєктування</span>
+                </div>
+                <button class="news-read" type="button" disabled>
+                  <span class="icon-games" aria-hidden="true"></span>
+                  <span data-i18n="gameSoon">Скоро</span>
+                </button>
+              </article>
+
+              <article class="game-card">
+                <span class="news-tag" data-i18n="gameBoard">Настільна</span>
+                <h3 data-i18n="checkersTitle">Шашки</h3>
+                <p data-i18n="checkersDesc">Швидка дуельна гра для очікування перед рейдом або рестартом сервера.</p>
+                <div class="game-meta">
+                  <span>1v1</span>
+                  <span data-i18n="gameStatusPlanned">Заплановано</span>
+                </div>
+              </article>
+
+              <article class="game-card">
+                <span class="news-tag" data-i18n="gameParty">Компанія</span>
+                <h3 data-i18n="dominoTitle">Доміно</h3>
+                <p data-i18n="dominoDesc">Спокійний режим для голосових кімнат і невеликих компаній.</p>
+                <div class="game-meta">
+                  <span>2-4</span>
+                  <span data-i18n="gameStatusPlanned">Заплановано</span>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel" id="panel-comms" data-panel-view="comms">
+            <div class="server-comms-head">
+              <div>
+                <p class="section-kicker" data-i18n="selectedServer">Обраний сервер</p>
+                <h2 id="commsServerName">PaDeNa Game UA server -1-</h2>
+              </div>
+              <div class="connection-badge" id="commsServerStatus">Online</div>
+            </div>
+            <div class="comms-tabs" aria-label="Server channel tabs">
+              <span class="is-active"><span class="icon-chat" aria-hidden="true"></span><span data-i18n="textChannel">Текстовий канал</span></span>
+              <span class="is-active"><span class="icon-headset" aria-hidden="true"></span><span data-i18n="voiceChannel">Голосовий канал</span></span>
+            </div>
+            <div class="comms-layout">
+              <div class="chat-panel">
+                <div class="chat-header">
+                  <span data-i18n="textChannel">Текстовий канал</span>
+                  <span id="chatChannel"># arma-reforger-pve</span>
+                </div>
+                <div class="messages" id="messages"></div>
+                <form class="chat-form" id="chatForm">
+                  <input id="chatInput" type="text" autocomplete="off" data-i18n-placeholder="messagePlaceholder" placeholder="Написати повідомлення...">
+                  <button type="submit" aria-label="Send">
+                    <span class="icon-send" aria-hidden="true"></span>
+                  </button>
+                </form>
+              </div>
+              <div class="voice-panel">
+                <div class="voice-header">
+                  <span data-i18n="voiceChannel">Голосовий канал</span>
+                  <strong id="voiceChannel">Arma PVE Voice</strong>
+                </div>
+                <div class="voice-users" id="voiceUsers"></div>
+                <div class="voice-test">
+                  <div class="voice-test-head">
+                    <span data-i18n="micTest">Перевірка мікрофона</span>
+                    <strong id="voiceStatus" data-i18n="micIdle">Не підключено</strong>
+                  </div>
+                  <div class="voice-meter" aria-hidden="true">
+                    <span id="voiceMeter"></span>
+                  </div>
+                  <div class="voice-diagnostic" id="voiceDiagnostic" data-i18n="micChecking">Перевіряю мікрофон...</div>
+                  <button class="voice-diagnostic-button" type="button" id="refreshMic">
+                    <span class="icon-mic" aria-hidden="true"></span>
+                    <span data-i18n="refreshMic">Оновити мікрофон</span>
+                  </button>
+                  <div class="voice-help" id="voiceHelp" data-i18n="micHelpDefault">Натисни Увійти та дозволь доступ до мікрофона у браузері.</div>
+                </div>
+                <div class="voice-controls">
+                  <button class="voice-button is-live" type="button" id="joinVoice">
+                    <span class="icon-headset" aria-hidden="true"></span>
+                    <span data-i18n="joinVoice">Увійти</span>
+                  </button>
+                  <button class="voice-icon" type="button" id="muteVoice" aria-label="Mute">
+                    <span class="icon-mic" aria-hidden="true"></span>
+                  </button>
+                  <button class="voice-icon" type="button" id="deafenVoice" aria-label="Deafen">
+                    <span class="icon-volume" aria-hidden="true"></span>
+                  </button>
+                </div>
+                <div class="voice-mixer">
+                  <div class="voice-mixer-head">
+                    <span data-i18n="micInput">Гучність мікрофона</span>
+                    <strong id="micGainValue">100%</strong>
+                  </div>
+                  <input id="micGain" type="range" min="0" max="200" value="100" aria-label="Microphone volume">
+                  <div class="voice-mixer-head">
+                    <span data-i18n="voiceOutput">Гучність голосу</span>
+                    <strong id="voiceVolumeValue">70%</strong>
+                  </div>
+                  <input id="voiceVolume" type="range" min="0" max="100" value="70" aria-label="Voice volume">
+                  <div class="voice-state-row">
+                    <span id="micToggleState" data-i18n="micOn">Мікрофон увімкнено</span>
+                    <span id="speakerToggleState" data-i18n="speakerOn">Динамік увімкнено</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" id="panel-style" data-panel-view="style">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker" data-i18n="appearance">Appearance</p>
+                <h2 data-i18n="styleTitle">Налаштування додатка</h2>
+              </div>
+            </div>
+            <div class="settings-grid">
+              <section class="settings-card">
+                <h3 data-i18n="interfaceSettings">Інтерфейс</h3>
+                <div class="style-grid">
+                  <button class="style-card is-selected" type="button" data-theme-choice="nexus">
+                    <span class="swatch swatch-nexus"></span>
+                    <strong data-i18n="themeNexus">Nexus Tactical</strong>
+                    <small data-i18n="themeNexusDesc">темний, тактичний, контрастний</small>
+                  </button>
+                  <button class="style-card" type="button" data-theme-choice="frost">
+                    <span class="swatch swatch-frost"></span>
+                    <strong data-i18n="themeFrost">Frost Ops</strong>
+                    <small data-i18n="themeFrostDesc">холодний, чистий, технічний</small>
+                  </button>
+                  <button class="style-card" type="button" data-theme-choice="ember">
+                    <span class="swatch swatch-ember"></span>
+                    <strong data-i18n="themeEmber">Ember Core</strong>
+                    <small data-i18n="themeEmberDesc">теплий, агресивний, турнірний</small>
+                  </button>
+                </div>
+              </section>
+
+              <section class="settings-card">
+                <h3 data-i18n="voiceSettings">Голос та мікрофон</h3>
+                <p data-i18n="voiceSettingsDesc">Основні регулятори голосу знаходяться у каналі конкретного сервера, щоб налаштування не заважали грі.</p>
+                <button class="secondary-action" type="button" data-switch-panel="servers">
+                  <span class="icon-headset" aria-hidden="true"></span>
+                  <span data-i18n="openChannels">Канали</span>
+                </button>
+              </section>
+            </div>
+          </section>
+        </section>
       </main>
     </div>
+
+    <div class="modal-backdrop" id="adminModal" hidden>
+      <section class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+        <button class="modal-close" type="button" data-close-admin aria-label="Close">×</button>
+        <div class="admin-lock" id="adminLogin">
+          <p class="section-kicker" data-i18n="adminArea">Admin Area</p>
+          <h2 id="adminTitle" data-i18n="adminTitle">Захищена панель</h2>
+          <form class="admin-form" id="adminForm">
+            <input id="adminName" type="text" autocomplete="username" data-i18n-placeholder="adminName" placeholder="Адмін">
+            <input id="adminPassword" type="password" autocomplete="current-password" data-i18n-placeholder="adminPassword" placeholder="Пароль">
+            <button class="primary-action" type="submit">
+              <span class="icon-lock" aria-hidden="true"></span>
+              <span data-i18n="unlock">Увійти</span>
+            </button>
+          </form>
+          <p class="admin-hint" id="adminHint" data-i18n="adminHint">Адмін-доступ перевіряється backend.</p>
+        </div>
+
+        <div class="admin-console" id="adminConsole" hidden>
+          <div class="section-head">
+            <div>
+              <p class="section-kicker" data-i18n="adminOnline">Admin Online</p>
+              <h2 data-i18n="adminControls">Керування серверами</h2>
+            </div>
+            <span class="connection-badge">2FA</span>
+          </div>
+          <div class="admin-server-list" id="adminServerList"></div>
+          <div class="audit-log">
+            <h3 data-i18n="auditLog">Журнал дій</h3>
+            <div id="auditLog"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="steamConsentModal" hidden>
+      <section class="consent-modal" role="dialog" aria-modal="true" aria-labelledby="steamConsentTitle">
+        <button class="modal-close" type="button" data-close-steam-consent aria-label="Close">×</button>
+        <p class="section-kicker" data-i18n="steamConsentArea">Steam Connect</p>
+        <h2 id="steamConsentTitle" data-i18n="steamConsentTitle">Підключення Steam</h2>
+        <p class="consent-copy" data-i18n="steamConsentText">PDN Game UA використає Steam тільки для підтвердження гравця.</p>
+        <ul class="consent-list">
+          <li data-i18n="steamConsentIdentity">Отримуємо SteamID, нік і аватар.</li>
+          <li data-i18n="steamConsentUsage">Використаємо їх для однакового імені в чаті та голосі.</li>
+          <li data-i18n="steamConsentNoPassword">Пароль Steam не бачить і не зберігає PDN Game UA.</li>
+          <li data-i18n="steamConsentFast">Якщо Steam уже відкритий або авторизований, підтвердження буде швидким.</li>
+        </ul>
+        <div class="consent-actions">
+          <button class="news-back" type="button" data-close-steam-consent>
+            <span data-i18n="steamConsentCancel">Скасувати</span>
+          </button>
+          <button class="primary-action" type="button" id="steamConsentConfirm">
+            <span class="icon-lock" aria-hidden="true"></span>
+            <span data-i18n="steamConsentContinue">Підключити Steam</span>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
   </body>
 </html>

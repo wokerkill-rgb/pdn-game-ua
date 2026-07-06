@@ -1,0 +1,112 @@
+{
+  "servers": [
+    {
+      "id": "arma-reforger-pve-1",
+      "name": "[UA/EU] Ukrainian Project *PaDeNa Game UA* server -1- [PVE]",
+      "game": "Arma Reforger",
+      "mode": "PVE / Ukrainian Project",
+      "map": "Everon",
+      "ip": "89.105.236.63:2001",
+      "bindAddress": "0.0.0.0",
+      "bindPort": 2001,
+      "publicAddress": "89.105.236.63",
+      "publicPort": 2001,
+      "a2sAddress": "0.0.0.0",
+      "a2sPort": 17777,
+      "joinUrl": "steam://run/1874880",
+      "players": 0,
+      "maxPlayers": 64,
+      "ping": 28,
+      "online": true,
+      "favorite": true,
+      "rcon": {
+        "address": "127.0.0.1",
+        "port": 19999,
+        "protocol": "tcp-line",
+        "passwordEnv": "PDN_RCON_PASSWORD_ARMA_REFORGER_PVE_1",
+        "restartCommandEnv": "PDN_RCON_RESTART_COMMAND_ARMA_REFORGER_PVE_1"
+      },
+      "channel": "# arma-reforger-pve",
+      "voice": "Arma PVE Voice",
+      "users": ["Admin", "Recon", "Medic"]
+    },
+    {
+      "id": "arma-reforger-pve-2",
+      "name": "[UA/EU] Ukrainian Project *PaDeNa Game UA* server -2- [PVE]",
+      "game": "Arma Reforger",
+      "mode": "PVE / Escapists",
+      "map": "Escapists - Random Map",
+      "ip": "89.105.236.63:2002",
+      "bindAddress": "0.0.0.0",
+      "bindPort": 2002,
+      "publicAddress": "89.105.236.63",
+      "publicPort": 2002,
+      "a2sAddress": "0.0.0.0",
+      "a2sPort": 17778,
+      "joinUrl": "steam://run/1874880",
+      "players": 0,
+      "maxPlayers": 64,
+      "ping": 29,
+      "online": false,
+      "favorite": true,
+      "channel": "# arma-reforger-pve-2",
+      "voice": "Arma PVE 2 Voice",
+      "users": ["Admin", "Scout", "Engineer"]
+    }
+  ],
+  "messages": {
+    "arma-reforger-pve-1": [
+      ["Admin", "Перший Arma Reforger PVE сервер PaDeNa Game UA додано в лаунчер."],
+      ["Recon", "Окремий текстовий канал і голос уже прив'язані до цього сервера."],
+      ["Medic", "Для прямого входу потрібен перевірений direct-connect формат Arma Reforger."]
+    ],
+    "arma-reforger-pve-2": [
+      ["Admin", "Другий Arma Reforger PVE сервер PaDeNa Game UA додано в лаунчер."],
+      ["Scout", "Сценарій: Escapists - Random Map. Підключення через 89.105.236.63:2002."],
+      ["Engineer", "A2S статус буде читатися через порт 17778, коли підключимо backend."]
+    ]
+  },
+  "activity": [
+    ["Arma Reforger PVE 2", "Escapists random map server added"],
+    ["Arma Reforger PVE", "PaDeNa Game UA server -1- added"]
+  ],
+  "news": [
+    {
+      "id": "arma-reforger-launch",
+      "type": "newsUpdate",
+      "server": "[UA/EU] Ukrainian Project *PaDeNa Game UA* server -1- [PVE]",
+      "date": "01.07",
+      "pinned": true,
+      "title": {
+        "uk": "Перший сервер Arma Reforger додано в PDN Game UA",
+        "en": "First Arma Reforger server added to PDN Game UA"
+      },
+      "text": {
+        "uk": "Український PVE сервер PaDeNa Game UA тепер має окрему картку, текстовий канал і голосовий канал у лаунчері.",
+        "en": "The Ukrainian PaDeNa Game UA PVE server now has its own card, text channel, and voice channel in the launcher."
+      },
+      "impact": {
+        "uk": "IP: 89.105.236.63:2001, A2S: 17777",
+        "en": "IP: 89.105.236.63:2001, A2S: 17777"
+      }
+    },
+    {
+      "id": "arma-reforger-pve-2",
+      "type": "newsUpdate",
+      "server": "[UA/EU] Ukrainian Project *PaDeNa Game UA* server -2- [PVE]",
+      "date": "01.07",
+      "title": {
+        "uk": "Другий Arma Reforger PVE сервер додано",
+        "en": "Second Arma Reforger PVE server added"
+      },
+      "text": {
+        "uk": "Server -2- працює на 89.105.236.63:2002 зі сценарієм Escapists - Random Map та окремими каналами для гравців.",
+        "en": "Server -2- runs on 89.105.236.63:2002 with the Escapists - Random Map scenario and separate player channels."
+      },
+      "impact": {
+        "uk": "IP: 89.105.236.63:2002, A2S: 17778",
+        "en": "IP: 89.105.236.63:2002, A2S: 17778"
+      }
+    }
+  ]
+}

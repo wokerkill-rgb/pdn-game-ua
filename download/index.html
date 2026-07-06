@@ -1,0 +1,188 @@
+﻿<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PDN Game UA Download</title>
+    <link rel="icon" href="assets/app.ico">
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #080b0d;
+        --panel: rgba(12, 17, 20, 0.86);
+        --line: rgba(255, 255, 255, 0.13);
+        --text: #f4f8f7;
+        --muted: #9aa8a6;
+        --accent: #18d2c1;
+        --accent-2: #ffb34d;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      .hero {
+        position: relative;
+        display: grid;
+        min-height: 100vh;
+        overflow: hidden;
+      }
+
+      .hero img,
+      .hero::after {
+        position: absolute;
+        inset: 0;
+      }
+
+      .hero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .hero::after {
+        content: "";
+        background:
+          linear-gradient(90deg, rgba(3, 5, 6, 0.94), rgba(3, 5, 6, 0.72) 44%, rgba(3, 5, 6, 0.36)),
+          linear-gradient(0deg, rgba(8, 11, 13, 0.94), transparent 55%);
+      }
+
+      main {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        align-content: center;
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 48px 0;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 42px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .mark {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        aspect-ratio: 1;
+        border: 1px solid color-mix(in srgb, var(--accent) 52%, transparent);
+        border-radius: 8px;
+        background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 34%, #101415), #101416);
+        color: #fff;
+        font-weight: 900;
+      }
+
+      h1 {
+        max-width: 760px;
+        margin: 0;
+        font-size: clamp(44px, 8vw, 92px);
+        line-height: 0.94;
+        letter-spacing: 0;
+      }
+
+      .copy {
+        max-width: 620px;
+        margin: 22px 0 0;
+        color: #c6d2d0;
+        font-size: clamp(17px, 2vw, 22px);
+        line-height: 1.5;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 34px;
+      }
+
+      .button,
+      .ghost {
+        display: inline-flex;
+        align-items: center;
+        min-height: 48px;
+        padding: 0 18px;
+        border-radius: 8px;
+        font-weight: 900;
+        text-decoration: none;
+      }
+
+      .button {
+        border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #05100f;
+      }
+
+      .ghost {
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.07);
+        color: var(--text);
+      }
+
+      .details {
+        display: grid;
+        gap: 8px;
+        max-width: 640px;
+        margin-top: 34px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      code {
+        color: #ffffff;
+        overflow-wrap: anywhere;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="hero">
+      <img src="assets/game-hero.png" alt="">
+      <main>
+        <div class="brand">
+          <span class="mark">P</span>
+          <span>PaDeNa Game UA</span>
+        </div>
+        <h1>PDN Game UA</h1>
+        <p class="copy">Усе необхідне для української спільноти в одному легкому додатку: сервери, новини, Steam-профіль, чат, голос і майбутні міні ігри.</p>
+<!-- PDN_DOWNLOAD_ACTIONS_START -->
+        <div class="actions">
+          <a class="button" href="https://github.com/wokerkill-rgb/pdn-game-ua/releases/download/v0.2.0/PDN_Game_UA_0.2.0_Public.zip" download>Скачати ZIP</a>
+          <a class="ghost" href="https://github.com/wokerkill-rgb/pdn-game-ua/releases/download/v0.2.0/PDN_Game_UA_Setup_0.2.0.exe">Installer</a>
+          <a class="ghost" href="https://github.com/wokerkill-rgb/pdn-game-ua/releases/download/v0.2.0/PDN%20Game%20UA%200.2.0.exe">Скачати .exe</a>
+          <a class="ghost" href="../downloads/pdn-game-ua/update.json">Manifest оновлень</a>
+          <a class="ghost" href="../downloads/pdn-game-ua/update.json.sig">Підпис manifest</a>
+        </div>
+<!-- PDN_DOWNLOAD_ACTIONS_END -->
+<!-- PDN_DOWNLOAD_DETAILS_START -->
+        <div class="details">
+          <span>Версія: <code>0.2.0</code></span>
+          <span>SHA256 exe: <code>73858094F35087551252E698199571A667BEA2C05581CB3E5F06DE286675518E</code></span>
+          <span>SHA256 installer: <code>2B002BF51F7A5F0257085A2D1BF6284C1D5FB26FB72197A9232174E3FD1E67C2</code></span>
+          <span>SHA256 zip: <code>A86F6E77FBA3905EE5FE0E5BD56AC6E300654675D47D5D8E887AC5F585FD544F</code></span>
+          <span>ZIP/portable підтримує внутрішню кнопку <code>Оновити</code>. Installer зручний для ярликів, Start Menu та uninstall.</span>
+          <span>У portable-версії нові релізи можна ставити кнопкою <code>Оновити</code>; manifest підписаний Ed25519.</span>
+        </div>
+<!-- PDN_DOWNLOAD_DETAILS_END -->
+      </main>
+    </section>
+  </body>
+</html>

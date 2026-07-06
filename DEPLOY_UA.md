@@ -1,104 +1,123 @@
 # Публікація сторінки PDN Game UA
 
-Готова папка для сайту:
+## Що куди завантажувати
+
+Великі файли публікуються тільки як GitHub Release assets:
 
 ```text
-website
+PDN Game UA 0.2.0.exe
+PDN_Game_UA_Setup_0.2.0.exe
+PDN_Game_UA_0.2.0_Public.zip
 ```
 
-У ній вже є:
-
-- `index.html` - головна сторінка з кнопкою `Завантажити PDN Game UA`
-- `download/files/PDN_Game_UA_0.1.17_Public.zip` - архів для гравців
-- `downloads/pdn-game-ua/update.json` - manifest для автооновлення
-- `downloads/pdn-game-ua/PDN Game UA 0.1.17.exe` - exe для автооновлення
-
-## Варіант 1: GitHub Pages
-
-Рекомендована назва репозиторію:
+У GitHub Pages завантажуються тільки легкі файли сайту:
 
 ```text
-pdn-game-ua
+index.html
+download/index.html
+download/assets/app.ico
+download/assets/game-hero.png
+downloads/pdn-game-ua/update.json
+downloads/pdn-game-ua/update.json.sig
+.nojekyll
+DEPLOY_UA.md
+README_UPLOAD_UA.md
 ```
 
-1. Створи репозиторій на GitHub:
+Не завантажуй `.exe` або `PDN_Game_UA_0.2.0_Public.zip` напряму в GitHub Pages через web upload. GitHub часто відхиляє файли більше 25 MB, і для оновлень безпечніше тримати великі файли в Releases.
+
+## GitHub Pages
+
+Репозиторій:
 
 ```text
 https://github.com/wokerkill-rgb/pdn-game-ua
 ```
 
-2. Завантаж у репозиторій весь вміст папки `website`.
-
-3. У GitHub відкрий:
+Налаштування:
 
 ```text
 Settings -> Pages
-```
-
-4. Вибери:
-
-```text
 Source: Deploy from a branch
 Branch: main
 Folder: /root
 ```
 
-5. Після публікації сторінка буде тут:
+Сторінка буде тут:
 
 ```text
 https://wokerkill-rgb.github.io/pdn-game-ua/
 ```
 
-Посилання для гравців:
+Окрема сторінка завантаження:
 
 ```text
-https://wokerkill-rgb.github.io/pdn-game-ua/
+https://wokerkill-rgb.github.io/pdn-game-ua/download/
 ```
 
-## Варіант 2: Cloudflare Pages
+## Автоматичний реліз через GitHub Actions
 
-1. Створи GitHub репозиторій `pdn-game-ua`.
-2. Завантаж у нього весь вміст папки `website`.
-3. У Cloudflare Pages натисни `Create a project`.
-4. Підключи репозиторій `pdn-game-ua`.
-5. Build settings:
+Workflow:
 
 ```text
-Framework preset: None
-Build command: пусто
-Build output directory: /
+.github/workflows/release.yml
 ```
 
-Cloudflare видасть посилання типу:
+Перед першим автоматичним релізом створи GitHub Secret:
 
 ```text
-https://pdn-game-ua.pages.dev/
+Settings -> Secrets and variables -> Actions -> New repository secret
+Name: PDN_UPDATE_PRIVATE_KEY
+Value: повний вміст .local-secrets/update-private.pem
 ```
 
-## Важливо для автооновлення
+Після цього реліз запускається тегом:
 
-Поточний додаток `0.1.17` шукає manifest за адресою:
+```bat
+git tag v0.2.1
+git push origin v0.2.1
+```
+
+Workflow сам:
+
+- збирає portable `.exe`;
+- збирає NSIS installer;
+- рахує SHA256 `.exe`;
+- створює `update.json`;
+- підписує `update.json.sig`;
+- перевіряє manifest;
+- збирає `PDN_Game_UA_VERSION_Public.zip`;
+- додає installer hash у сайт і release notes;
+- оновлює `index.html` і `download/index.html`;
+- збирає `PDN_Game_UA_VERSION_Website_Update_Lite_Files.zip`;
+- публікує GitHub Release.
+
+## Ручна підготовка сайту
+
+Якщо потрібно підготувати сайт локально:
+
+```bat
+npm run release:manifest
+npm run update:sign
+npm run update:verify
+npm run release:website
+npm run release:website:stage
+```
+
+Після цього папка буде тут:
 
 ```text
-https://padena-game-ua.com/downloads/pdn-game-ua/update.json
+dist/PDN_Game_UA_VERSION_Website_Update_Lite_Files
 ```
 
-Якщо хочеш, щоб автооновлення працювало саме через GitHub Pages, треба перезібрати додаток з таким manifest URL:
+Її вміст можна завантажувати в GitHub Pages.
 
-```text
-https://wokerkill-rgb.github.io/pdn-game-ua/downloads/pdn-game-ua/update.json
-```
+## Що перевірити після публікації
 
-Якщо хочеш, щоб автооновлення працювало через Cloudflare Pages:
-
-```text
-https://pdn-game-ua.pages.dev/downloads/pdn-game-ua/update.json
-```
-
-Найкращий професійний варіант:
-
-```text
-https://padena-game-ua.com/
-```
-
-і направити цей домен на Cloudflare Pages. Тоді посилання красиве, а додаток не треба буде перебудовувати при зміні GitHub-репозиторію.
+- Кнопка `Завантажити ZIP` відкриває GitHub Release asset.
+- Кнопка `Installer` відкриває `PDN_Game_UA_Setup_VERSION.exe`.
+- Кнопка `Скачати .exe` відкриває прямий `.exe` з GitHub Release.
+- `/download/` відкривається без 404.
+- `downloads/pdn-game-ua/update.json` відкривається.
+- `downloads/pdn-game-ua/update.json.sig` відкривається.
+- SHA256 на сторінці збігається з GitHub Release notes.
